@@ -1,0 +1,25 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Apr 24 06:45:05 2019
+
+@author: Donovan C
+"""
+
+import pandas as pd
+xl = pd.ExcelFile('SalesDataFull.xlsx')
+OrdersOnlyData = xl.parse('Orders')
+
+lines = '='*25
+
+df_month = OrdersOnlyData["Order Date"].dt.month
+
+OrdersOnlyData["Month"] = df_month
+
+selected_month = int(input('Please select a month: '))
+
+month_select = OrdersOnlyData.loc[OrdersOnlyData['Month'] == selected_month]
+month_profit = month_select[['Product Name', 'Profit']]
+best_month_profit = month_profit.groupby('Product Name').sum().sort_values(by = 'Profit', ascending = False)
+print('\nBest Product in the {} month: '.format(selected_month))
+print(lines)
+print(best_month_profit.head(10))
